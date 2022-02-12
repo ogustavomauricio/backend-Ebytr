@@ -5,7 +5,7 @@ const sinon = require('sinon');
 const { MongoClient } = require('mongodb');
 const { getConnection } = require('./mongoMockConnection');
 
-const { createTask } = require('../../model/taskModel');
+const taskModel = require('../../model/taskModel');
 
 /* Vamos importar o módulo responsável para abrir a conexão nos nossos models para poder fazer o seu `double`.*/
 const mongoConnection = require('../../model/connection');
@@ -25,8 +25,23 @@ describe('Insere uma nova tarefa no DB', () => {
 
 	/* Restauraremos a função `connect` original após os testes. */
 	after(async () => {
-		await connectionMock.db('model_example').collection('movies').drop();
+		await connectionMock.db('EBTRY').collection('task').drop();
 		MongoClient.connect.restore();
 	});
+
+	describe('quando é inserido com sucesso', () => {
+		it('retorna um objeto', async () => {
+
+			const response = await taskModel.createTaskModel(payloadTask);
+
+			expect(response).to.be.a('object');   
+		});
+
+		it("Esse objeto possui a propriedade 'id'", async() => {
+			const response = await taskModel.createTaskModel(payloadTask);
+
+      expect(response).to.have.a.property('id');
+		})
+	})
 
 })

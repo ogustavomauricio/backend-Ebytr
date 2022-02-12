@@ -1,11 +1,14 @@
+const { Timestamp } = require('mongodb');
 const {
-	createTask,
+	createTaskModel,
 } = require('../model/taskModel');
 
 const createTaskService = async (task) => {
-  const task = await createTask(task);
+	const time = new Date()
+		// console.log(mydate2);
+  const createTask = await createTaskModel(task, time);
 
-	return task;
+	return createTask;
 };
 
 module.exports = {
