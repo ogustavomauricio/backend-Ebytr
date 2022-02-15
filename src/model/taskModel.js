@@ -8,14 +8,14 @@ const createTaskModel = async (payload, time) => {
 	return { id, status, task };
 };
 
-// const taskModelGetAll = async () => {
-//   const conn = await getConnection();
-//   const query = await conn.collection('task').find({}).toArray();
-// //   console.log(query);
-// 	return query;
-// }
+const taskModelGetAll = async () => {
+  const conn = await getConnection();
+  const query = await conn.collection('task').find({}).toArray();
+//   console.log(query);
+	return query;
+}
 
 module.exports = {
 	createTaskModel,
-	// taskModelGetAll,
+	taskModelGetAll,
 }

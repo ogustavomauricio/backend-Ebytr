@@ -3,64 +3,67 @@ const sinon = require('sinon');
 
 /* vamos importar o MongoClient e o mock da conexão que criamos anteriormente. */
 const { MongoClient } = require('mongodb');
-const mongoConnection = require('./mongoMockConnection');
+const {getConnection} = require('./mongoMockConnection');
 
 
 const taskModel = require('../../model/taskModel');
-const { beforeEach, afterEach } = require('mocha');
 
+describe('List all task', () => {
 
-describe('BUSCA AS TASK NO BANCO DE DADO', () => {
-	let connectionMock;
+  describe('when the task list is empty', async () => {
+    let connectionMock;
 
-	beforeEach(async() => {
-		console.log('antes do teste');
-	  connectionMock = await mongoConnection.getConnection();   
-		  sinon.stub(MongoClient, 'connect').resolves(connectionMock);
-	});
-  
-	  afterEach(async() => {
-		console.log('acabou o teste');
-	  MongoClient.connect.restore();
-	});
-
-  describe('QUANDO NÃO EXISTE NENHUMA TASK CRIADA', () => {	
-  	it('RETORNA UM ARRAY', async () => {
-			const response = await taskModel.taskModelGetAll();
-
-			expect(response).to.be.an('array');
-	  });
-
-		it('O ARRAY É VAZIO', async () => {
-			const response = await taskModel.taskModelGetAll();
-
-			expect(response).to.be.empty;
-	  });
-	});
-
-	describe('QUANDO EXISTIR TAREFAS CRIADAS', () => {
-		before(async () => {
-			console.log('TESTE 2');
-      const taskCollection = await connectionMock;
-      await taskCollection.db('EBTRY').collection('task').insertOne({ task: 'tarefa 55' });
+    before(async () => {
+      connectionMock = await getConnection();
+      sinon.stub(MongoClient, 'connect').resolves(connectionMock);
     });
 
-		after(async() => {
-			console.log('ACABOU O TESTE 2');
 
-        await connectionMock.db('EBTRY').collection('task').drop();
+    after(async () => {
+      MongoClient.connect.restore();
     });
-		it('Retorna um Array', async () => {		
-		  const getTask = await taskModel.taskModelGetAll();
-			
 
-			expect(getTask).to.be.an('array');
-		});
+    it('should return an array', async () => {
+      const list = await taskModel.taskModelGetAll();
 
-		it('O array não pode estar vazio', async () => {
-			const task = await taskModel.taskModelGetAll();
+      expect(list).to.be.an('array');
+    });
 
-			expect(task).to.be.not.empty;
-		});	
-	});
+    it('that is empty', async () => {
+    const list = await taskModel.taskModelGetAll();
+
+    expect(list).to.be.empty;
+    })
+
+  });
+
+  describe('when the task list is not empty', async () => {
+    const newProd = { task: 'product1', status: 'pendente'};
+
+    let connectionMock;
+
+    before(async () => {
+      connectionMock = await getConnection();
+      sinon.stub(MongoClient, 'connect').resolves(connectionMock);
+    });
+
+
+    after(() => {
+      MongoClient.connect.restore();
+    });
+
+    it('should return an array', async () => {
+      await connectionMock.db('EBTRY').collection('task').insertOne(newProd)
+      const list = await taskModel.taskModelGetAll();
+
+      expect(list).to.be.an('array');
+    });
+
+    it('that is not empty', async () => {
+      const list = await taskModel.taskModelGetAll();
+
+      expect(list).to.be.not.empty;
+    });
+
+  });
 });

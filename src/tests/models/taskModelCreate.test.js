@@ -42,5 +42,6 @@ describe('Insert a new task in DB', () => {
 
 			expect(response).to.be.a.property('status');
 		})
-	});
+	});	
 });
+
