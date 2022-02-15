@@ -17,13 +17,13 @@ const createTaskService = async (task) => {
 	return result;
 };
 
-// const getAllService = async () => {
-// 	const task = await taskModelGetAll();
+const getAllService = async () => {
+	const task = await taskModelGetAll();
 
-// 	return task;
-// }
+	return task;
+}
 
 module.exports = {
 	createTaskService,
-	// getAllService
+	getAllService
 }
