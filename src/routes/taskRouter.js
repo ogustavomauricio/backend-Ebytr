@@ -3,7 +3,7 @@ const routes = express.Router();
 
 const {
   createTaskController,
-} = require('../controllers/TaskControllers');
+} = require('../controllers/taskControllers');
 
 //ROTA PARA CRIAR UMA NOVA TAREFA
 routes.post('/task',createTaskController);

@@ -3,12 +3,17 @@ const {
 	createTaskModel,
 } = require('../model/taskModel');
 
-const createTaskService = async (task) => {
-	const time = new Date()
-		// console.log(mydate2);
-  const createTask = await createTaskModel(task, time);
+const { taskSchemas } = require('../schemas/validate');
 
-	return createTask;
+const createTaskService = async (task) => {	
+	const {error} = taskSchemas.validate(task);
+	const msgError =  error.details[0].message;
+	if (msgError) return { status: 400, message: 'O campo não pode estar vazio'};
+
+	const time = new Date();		
+  const result = await createTaskModel(task, time);
+
+	return result;
 };
 
 module.exports = {
