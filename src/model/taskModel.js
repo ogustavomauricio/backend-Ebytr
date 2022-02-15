@@ -1,10 +1,10 @@
 const { getConnection } = require('./connection');
 
-const createTaskModel = async (task, time) => {
+const createTaskModel = async (task, time, status) => {
   const conn = await getConnection();
-	const {insertedId: id} = await conn.collection('task').insertOne({ task, created_at:time });
+	const {insertedId: id } = await conn.collection('task').insertOne({ task, created_at:time, status });
 	
-	return id;
+	return {id, status};
 };
 
 const taskModelGetAll = async () => {

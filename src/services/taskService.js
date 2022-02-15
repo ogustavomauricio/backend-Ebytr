@@ -1,6 +1,7 @@
 const { Timestamp } = require('mongodb');
 const {
 	createTaskModel,
+	taskModelGetAll
 } = require('../model/taskModel');
 
 const { taskSchemas } = require('../schemas/validate');
@@ -16,6 +17,13 @@ const createTaskService = async (task) => {
 	return result;
 };
 
+const getAllService = async () => {
+	const task = await taskModelGetAll();
+
+	return task;
+}
+
 module.exports = {
 	createTaskService,
+	getAllService
 }

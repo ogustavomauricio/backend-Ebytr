@@ -1,47 +1,46 @@
-const { expect } = require('chai');
 const sinon = require('sinon');
+const { expect } = require('chai');
 
-/* vamos importar o MongoClient e o mock da conexão que criamos anteriormente. */
 const { MongoClient } = require('mongodb');
 const { getConnection } = require('./mongoMockConnection');
 
-const taskModel = require('../../model/taskModel');
+const taskModelCreate = require('../../model/taskModel');
 
-/* Vamos importar o módulo responsável para abrir a conexão nos nossos models para poder fazer o seu `double`.*/
-const mongoConnection = require('../../model/connection');
-
-describe('Insere uma nova tarefa no DB', () => {
-  
+describe('Insert a new task in DB', () => {
 	let connectionMock;
-	const payloadTask = {
-		task:'Tarefa 01',
+
+	const newTask = {
+		task: 'Projeto EBYTR',
+		status: 'pendente',
 	};
-	
-	/* Aqui colocamos o código para usar o banco montado pela lib `mongo-memory-server` */
+
 	before(async () => {
 		connectionMock = await getConnection();
 		sinon.stub(MongoClient, 'connect').resolves(connectionMock);
-	});
+	})
 
-	/* Restauraremos a função `connect` original após os testes. */
 	after(async () => {
-		await connectionMock.db('EBTRY').collection('task').drop();
 		MongoClient.connect.restore();
 	});
 
-	describe('quando é inserido com sucesso', () => {
-		it('retorna um objeto', async () => {
 
-			const response = await taskModel.createTaskModel(payloadTask);
+	describe('when is successefully inserted', () => {
+		it('should return a object', async () => {
+			const response = await taskModelCreate.createTaskModel(newTask);
 
-			expect(response).to.be.a('object');   
+			expect(response).to.be.a('object');
 		});
 
-		it("Esse objeto possui a propriedade 'id'", async() => {
-			const response = await taskModel.createTaskModel(payloadTask);
+		it('That should have an id', async () => {
+			const response = await taskModelCreate.createTaskModel(newTask);
 
-      expect(response).to.have.a.property('id');
+			expect(response).to.be.a.property('id');
+		});
+
+		it('That should have an status', async () => {
+			const response = await taskModelCreate.createTaskModel(newTask);
+
+			expect(response).to.be.a.property('status');
 		})
-	})
-
-})
+	});
+});

@@ -7,17 +7,20 @@ const mongoConnection = require('./mongoMockConnection');
 
 
 const taskModel = require('../../model/taskModel');
+const { beforeEach, afterEach } = require('mocha');
 
 
 describe('BUSCA AS TASK NO BANCO DE DADO', () => {
 	let connectionMock;
 
-	before(async() => {
+	beforeEach(async() => {
+		console.log('antes do teste');
 	  connectionMock = await mongoConnection.getConnection();   
 		  sinon.stub(MongoClient, 'connect').resolves(connectionMock);
 	});
   
-	  after(async() => {
+	  afterEach(async() => {
+		console.log('acabou o teste');
 	  MongoClient.connect.restore();
 	});
 
@@ -37,12 +40,15 @@ describe('BUSCA AS TASK NO BANCO DE DADO', () => {
 
 	describe('QUANDO EXISTIR TAREFAS CRIADAS', () => {
 		before(async () => {
+			console.log('TESTE 2');
       const taskCollection = await connectionMock;
-      await taskCollection.db('EBTRY').collection('task').insertOne({ task: 'tarefa 01' });
+      await taskCollection.db('EBTRY').collection('task').insertOne({ task: 'tarefa 55' });
     });
 
 		after(async() => {
-      await connectionMock.db('EBTRY').collection('task').drop();
+			console.log('ACABOU O TESTE 2');
+
+        await connectionMock.db('EBTRY').collection('task').drop();
     });
 		it('Retorna um Array', async () => {		
 		  const getTask = await taskModel.taskModelGetAll();
