@@ -8,8 +8,8 @@ const { taskSchemas } = require('../schemas/validate');
 
 const createTaskService = async (task) => {	
 	const {error} = taskSchemas.validate(task);
-	const msgError =  error.details[0].message;
-	if (msgError) return { status: 400, message: 'O campo não pode estar vazio'};
+	
+	if (error) return { status: 400, message: 'O campo não pode estar vazio'};
 
 	const time = new Date();		
   const result = await createTaskModel(task, time);
@@ -17,13 +17,13 @@ const createTaskService = async (task) => {
 	return result;
 };
 
-const getAllService = async () => {
-	const task = await taskModelGetAll();
+// const getAllService = async () => {
+// 	const task = await taskModelGetAll();
 
-	return task;
-}
+// 	return task;
+// }
 
 module.exports = {
 	createTaskService,
-	getAllService
+	// getAllService
 }

@@ -4,33 +4,40 @@ const sinon = require('sinon');
 const taskService = require('../../services/taskService');
 const taskModel = require('../../model/taskModel')
 
-describe('Insere um novo Filme no DB', () => {
-	describe('Quando o payload informado não é válido', () => {
-		const payloadTask = '';
+describe('Insert a new task on DB', () => {
+	describe('When the informed payload is not valid', () => {
+		it('Returns a message error when the "task" is not informed', async () => {
+			const response = await taskService.createTaskService({task: '', status: 'pendente'});
+			const { status, message } = response;
 
-		it('Retorna uma message de error', async () => {
-			const response = await taskService.createTaskService(payloadTask);
 
-			expect(response).to.be.a('object');
-		});
-		it('o status retornado deve ser "400"', async () =>{
-			const { status } = await taskService.createTaskService(payloadTask);
-      
 			expect(status).to.be.equal(400);
+			expect(message).to.be.equal('O campo não pode estar vazio');
 		});
-		it('A string deve conter a msg de erro programada', async () =>{
-			const { message } = await taskService.createTaskService(payloadTask);
-      
+
+		it('Returns a message error when the "status" is not informed', async () => {
+			const response = await taskService.createTaskService({task: 'projeto EBYTR', status: ''});
+			const { status, message } = response;
+
+
+			expect(status).to.be.equal(400);
 			expect(message).to.be.equal('O campo não pode estar vazio');
 		});
 	})
-	describe('Quando o payload informado é válido', () => {
-		const taskPayload = 'Tarefa 01';
+
+	describe('when the reported payloads are valid', () => {
+
+		const taskPayload = {
+			task: 'Project EBYTR',
+			status: 'pendente',
+		};
+
+
 		before(() => {
       const ID_EXAMPLE = '604cb554311d68f491ba5781';
 
       sinon.stub(taskModel, 'createTaskModel')
-        .resolves( { id: ID_EXAMPLE } );
+        .resolves( { id: ID_EXAMPLE,...taskPayload } );
     });
 
     // Restauraremos a função `create` original após os testes.
@@ -38,19 +45,28 @@ describe('Insere um novo Filme no DB', () => {
       taskModel.createTaskModel.restore();
     });
 
-		it('Possui um objeto', async () => {
-			const response = await taskService.createTaskService(taskPayload);
-			console.log('RESPONSEEEE ',response);
+		it('Has an object', async () => {
+			const response = await taskService.createTaskService({task: 'project', status: 'pendente'});		
 
       expect(response).to.be.a('object');
 		});
-		// it('Espera que esse objeto tenha um id', async () => {
-		// 	// ESTÁ RECENDO O OBJETO COM STATUS E MESSAGE DO ERROR. E NÃO O OBJETO COM ID
-		// 	const response = await taskService.createTaskService(taskPayload);
-			
+		
+		it('The object has an "id" property', async () => {
+			const response = await taskService.createTaskService({task: 'project', status: 'pendente'});
 
-    //   expect(response).to.be.equal('604cb554311d68f491ba5781');
-		// });
-	})
+      expect(response).to.be.have.a.property('id');
+		});
 
-})
+		it('The object has an "status" property', async () => {
+			const response = await taskService.createTaskService({task: 'project', status: 'pendente'});
+
+      expect(response).to.be.have.a.property('status');
+		});
+
+		it('The object has an "task" property', async () => {
+			const response = await taskService.createTaskService({task: 'project', status: 'pendente'});
+
+      expect(response).to.be.have.a.property('task');
+		});
+	});
+});

@@ -5,19 +5,21 @@ const {
 
 const createTaskController = async (req, res) => {
   const response = await createTaskService(req.body);
-  if (response.message) {
-return res.status(response.status).json({ message: response.message })
+  const { message, status, result } = response;
+
+  if (message) {
+    return res.status(status).json(message)
   } 
-	 return res.status(201).json({ response });
+	 return res.status(201).json(result);
 };
 
-const getAllTaskController = async (req, res) => {
-const getTask = await getAllService();
+// const getAllTaskController = async (req, res) => {
+// const getTask = await getAllService();
 
-return res.status(200).json(getTask);
-}
+// return res.status(200).json(getTask);
+// }
 
 module.exports = {
 	createTaskController,
-  getAllTaskController
+  // getAllTaskController
 }
