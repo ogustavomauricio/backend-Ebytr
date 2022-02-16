@@ -1,7 +1,8 @@
 const { Timestamp } = require('mongodb');
 const {
 	createTaskModel,
-	taskModelGetAll
+	taskModelGetAll,
+	deleteTask
 } = require('../model/taskModel');
 
 const { taskSchemas } = require('../schemas/validate');
@@ -23,7 +24,16 @@ const getAllService = async () => {
 	return task;
 }
 
+const deleteTaskService = async (id) => {
+	if (id.length !== 24) return { status:400, message: 'Wrong id format'}
+
+	const result = await deleteTask(id);
+
+	return result;
+}
+
 module.exports = {
 	createTaskService,
-	getAllService
+	getAllService,
+	deleteTaskService
 }
