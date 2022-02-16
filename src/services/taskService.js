@@ -25,7 +25,10 @@ const getAllService = async () => {
 }
 
 const deleteTaskService = async (id) => {
-	if (id.length !== 24) return { status:400, message: 'Wrong id format'}
+	console.log(id);
+	if (id.length !== 24) {
+		return { err: { status:400, message: 'Wrong id format'}}
+	}
 
 	const result = await deleteTask(id);
 
@@ -35,5 +38,5 @@ const deleteTaskService = async (id) => {
 module.exports = {
 	createTaskService,
 	getAllService,
-	deleteTaskService
+	deleteTaskService,
 }
