@@ -2,10 +2,12 @@ const res = require('express/lib/response');
 const {
 	createTaskService,
    getAllService,
-   deleteTaskService
+   deleteTaskService,
+   getByIdTaskService
 } = require('../services/taskService');
 
 const createTaskController = async (req, res) => {
+  console.log(req.body);
   const response = await createTaskService(req.body);
 
   const { message, status } = response;
@@ -31,10 +33,19 @@ if ( err ) {
   return res.status(err.status).json({ message: err.message })
 }
 return res.status(200).json({ message });
+};
+
+const getByIdTaskController = async (req, res) => {
+ const { id } = req.params;
+
+ const result = await getByIdTaskService(id);
+
+ return res.status(200).json(result);
 }
 
 module.exports = {
 	createTaskController,
   getAll,
   deleteTaskController,
+  getByIdTaskController
 }
