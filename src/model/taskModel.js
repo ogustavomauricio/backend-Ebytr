@@ -1,4 +1,6 @@
 const { getConnection } = require('./connection');
+const { ObjectId } = require('mongodb')
+
 
 const createTaskModel = async (payload, time) => {
   const conn = await getConnection();
@@ -13,9 +15,17 @@ const taskModelGetAll = async () => {
   const query = await conn.collection('task').find({}).toArray();
 //   console.log(query);
 	return query;
-}
+};
+
+const deleteTask = async (id) => {
+	const conn = await getConnection();
+	await conn.collection('task').deleteOne({ _id: ObjectId(id)});
+
+	return { message: 'Task excluida com sucesso'};
+};
 
 module.exports = {
 	createTaskModel,
 	taskModelGetAll,
+	deleteTask,
 }

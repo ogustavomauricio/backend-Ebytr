@@ -1,7 +1,7 @@
 const res = require('express/lib/response');
 const {
 	createTaskService,
-  //  getAllService,
+   getAllService,
 } = require('../services/taskService');
 
 const createTaskController = async (req, res) => {
@@ -16,13 +16,13 @@ const createTaskController = async (req, res) => {
 	 return res.status(201).json( response );
 };
 
-// const getAllTaskController = async (req, res) => {
-// const getTask = await getAllService();
+const getAll = async (req, res) => {
+const getTask = await getAllService();
 
-// return res.status(200).json(getTask);
-// }
+return res.status(200).json({ task: getTask });
+}
 
 module.exports = {
 	createTaskController,
-  // getAllTaskController
+  getAll
 }
