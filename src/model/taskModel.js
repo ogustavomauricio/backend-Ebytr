@@ -31,11 +31,33 @@ const getByIdTask = async (id) => {
 	const response = await conn.collection('task').findOne({ _id: ObjectId(id)});
 console.log(response);
 	return response;
+};
+// PARA VERIFICAR SE O ID PASSADO EXISTE NO DB
+const verifyIdModel = async (id) => {
+	// console.log('VERIFY', id);
+  const conn = await getConnection();
+  const verifyId = await conn.collection('task').findOne({_id: ObjectId(id) });
+  // console.log('verify',verifyId);
+  return verifyId;
 }
+
+//REQUIÇÃO PARA ATUALIZAR O CLIENTE
+const updateTaskModel = async (id, duties) => {
+  const { task, status } = duties;
+  const conn = await getConnection();
+  const result = await conn.collection('task').updateOne({ _id: ObjectId(id) }, { $set: {task, status }},);
+console.log(result);
+  return result
+};
+
+
+
 
 module.exports = {
 	createTaskModel,
 	taskModelGetAll,
 	deleteTask,
 	getByIdTask,
+	updateTaskModel,
+	verifyIdModel
 }

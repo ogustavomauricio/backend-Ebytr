@@ -3,7 +3,8 @@ const {
 	createTaskService,
    getAllService,
    deleteTaskService,
-   getByIdTaskService
+   getByIdTaskService,
+   updateTaskService
 } = require('../services/taskService');
 
 const createTaskController = async (req, res) => {
@@ -41,11 +42,24 @@ const getByIdTaskController = async (req, res) => {
  const result = await getByIdTaskService(id);
 
  return res.status(200).json(result);
-}
+};
+
+//FUNÇÃO PARA ATUALIZAR O CLIENTE
+const updateTaskController = async(req, res) => {
+  const { id } = req.params;
+  
+  const updateTask = await updateTaskService(id, req.body, {new:true})
+  const {status, message} = updateTask;
+  if (message) {
+    return res.status(status).json(message)
+  }
+  return res.status(200).json(updateTask);
+};
 
 module.exports = {
 	createTaskController,
   getAll,
   deleteTaskController,
-  getByIdTaskController
+  getByIdTaskController,
+  updateTaskController
 }
